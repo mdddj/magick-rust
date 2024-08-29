@@ -66,6 +66,7 @@ impl PixelWand {
         }
     }
 
+
     pub fn fmt_w_prefix(&self, f: &mut fmt::Formatter, prefix: &str) -> fmt::Result {
         let mut prf = prefix.to_string();
         prf.push_str("    ");
@@ -84,6 +85,8 @@ impl PixelWand {
             _ => Err(MagickError(self.get_exception()?.0)),
         }
     }
+
+
 
     string_get!(get_color_as_string, PixelGetColorAsString);
     string_get!(

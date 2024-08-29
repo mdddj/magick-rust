@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 use std::ffi::{CStr, CString};
+use std::ptr::{null, null_mut};
 use std::{fmt, ptr, slice};
 
 use libc::c_void;
@@ -71,6 +72,14 @@ impl MagickWand {
         } else {
             Ok(MagickWand { wand: result })
         };
+    }
+
+
+    pub fn set_monochrome(&self){
+        unsafe {
+            let img = self.get_image().unwrap().get_ptr();
+            bindings::SetImageMonochrome(img, null_mut());
+        }
     }
 
     pub fn new_image(&self, columns: usize, rows: usize, background: &PixelWand) -> Result<()> {
@@ -561,6 +570,7 @@ impl MagickWand {
             _ => Err(MagickError(self.get_exception()?.0)),
         }
     }
+
 
     pub fn gaussian_blur_image(&self, radius: f64, sigma: f64) -> Result<()> {
         let result = unsafe { bindings::MagickGaussianBlurImage(self.wand, radius, sigma) };
@@ -1608,6 +1618,8 @@ impl MagickWand {
     );
 
     get!(get_image_colors, MagickGetImageColors, usize);
+
+
 
     string_set_get!(
         get_filename,                    set_filename,                    MagickGetFilename,                 MagickSetFilename
